@@ -27,6 +27,7 @@ public class App extends ResourceConfig {
 
                     @Override
                     protected void configure() {
+                        bind(session).to(SqlSession.class);
                         bind(itemMapper).to(ItemMapper.class);
                     }
                 });

@@ -6,4 +6,13 @@ import java.util.List;
 
 public interface ItemMapper {
     List<Item> findAll();
+
+    Item findItemById(Integer id);
+
+    Integer insertItem(Item item);
+
+    Integer updateItem(Item item);
+
+    Integer deleteItemById(Integer id);
+
 }

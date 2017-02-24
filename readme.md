@@ -11,8 +11,9 @@
      `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
      `price` double unsigned NOT NULL DEFAULT '0',
      `name` varchar(255) DEFAULT NULL,
+     `categoryId` int(11) DEFAULT '1',
      PRIMARY KEY (`id`)
-   ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+   ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
    # 可以在 item 中自定义两条数据
    ```
@@ -24,9 +25,9 @@
    ./gradlew jettyrun
    ```
 
-4. 在浏览器中测试 http://localhost:8080/jersey-mybaties-I
+4. 在浏览器中测试 http://localhost:8080/101-jersey-web
 
-5. 在浏览器中测试 http://localhost:8080/jersey-mybaties-I/items 
+5. 在浏览器中测试 http://localhost:8080/101-jersey-web/items
 
    ​
 
@@ -61,4 +62,4 @@
 
 ## 常见问题
 
-1. 若是基于docker的数据库，可能会出现假死现象，需要重启 docker 和 mysql
+1. 若是基于docker的数据库，可能会出现假死现象，需要重启 docker 和 mysql;
