@@ -1,7 +1,9 @@
 package school.thoughtworks.pos.resource;
 
 import org.apache.ibatis.session.SqlSession;
+import school.thoughtworks.pos.bean.Category;
 import school.thoughtworks.pos.bean.Item;
+import school.thoughtworks.pos.mapper.CategoryMapper;
 import school.thoughtworks.pos.mapper.ItemMapper;
 
 import javax.inject.Inject;
@@ -13,9 +15,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Path("/categories")
+public class CategoryResource {
+    @Inject
+    private CategoryMapper categoryMapper;
 
-@Path("/items")
-public class ItemResource {
     @Inject
     private ItemMapper itemMapper;
 
@@ -24,55 +28,51 @@ public class ItemResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllItems() {
+    public Response findAll() {
         Map<String, Object> result = new HashMap<>();
 
-        List<Item> originItems = itemMapper.findAll();
+        List<Category> categories = categoryMapper.findAll();
 
-        List<Map> items = originItems
+        List<Map> items = categories
                 .stream()
                 .map(item -> item.toMap())
                 .collect(Collectors.toList());
 
-        result.put("items", items);
+        result.put("categories", items);
         result.put("totalCount", items.size());
 
         return Response.status(Response.Status.OK).entity(result).build();
     }
-
 
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findItemById(@PathParam("id") Integer id) {
 
-        Item originItems = itemMapper.findItemById(id);
+        Category originItems = categoryMapper.findCategoryById(id);
 
         Map item = new HashMap();
 
-        item.put("item", originItems.toMap());
+        item.put("category", originItems.toMap());
 
         return Response.status(Response.Status.OK).entity(item).build();
     }
+
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public Response findItemById(Map data) {
 
-        double price = (double) data.get("price");
         String name = (String) data.get("name");
-        int categoryId = (Integer) data.get("categoryId");
 
-        Item item = new Item();
-        item.setName(name);
-        item.setPrice(price);
-        item.setCategoryId(categoryId);
+        Category category = new Category();
+        category.setName(name);
 
-        itemMapper.insertItem(item);
+        categoryMapper.insertCategory(category);
         session.commit();
 
         Map result = new HashMap();
-        result.put("itemUri", "items/" + item.getId());
+        result.put("categoryUri", "categories/" + category.getId());
 
         return Response.status(Response.Status.CREATED).entity(result).build();
     }
@@ -82,17 +82,13 @@ public class ItemResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateItem(Map data, @PathParam("id") Integer id) {
 
-        double price = (double) data.get("price");
         String name = (String) data.get("name");
-        int categoryId = (Integer) data.get("categoryId");
 
-        Item item = new Item();
-        item.setName(name);
-        item.setPrice(price);
-        item.setCategoryId(categoryId);
-        item.setId(id);
+        Category category = new Category();
+        category.setName(name);
+        category.setId(id);
 
-        itemMapper.updateItem(item);
+        categoryMapper.updateCategory(category);
         session.commit();
 
         return Response.status(Response.Status.NO_CONTENT).build();
@@ -102,13 +98,17 @@ public class ItemResource {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteItemById(@PathParam("id") Integer id) {
+        List<Item> items = itemMapper.findItemByCategoryId(id);
 
-        itemMapper.deleteItemById(id);
+        if (items.size() != 0) {
+            System.out.println("该分类下存在商品，不能删除");
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        categoryMapper.deleteCategoryById(id);
         session.commit();
 
         return Response.status(Response.Status.NO_CONTENT).build();
     }
+
 }
-
-
-

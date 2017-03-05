@@ -15,4 +15,6 @@ public interface ItemMapper {
 
     Integer deleteItemById(Integer id);
 
+    List<Item> findItemByCategoryId(Integer categoryId);
+
 }

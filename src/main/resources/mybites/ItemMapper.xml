@@ -30,4 +30,8 @@
     <delete id="deleteItemById" parameterType="java.lang.Integer">
         delete from item where id = #{id};
     </delete>
+
+    <select id="findItemByCategoryId" parameterType="java.lang.Integer" resultMap="itemMap">
+        select * from item where categoryId = #{id};
+    </select>
 </mapper>
