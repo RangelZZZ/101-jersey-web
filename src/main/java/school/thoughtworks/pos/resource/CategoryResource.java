@@ -23,9 +23,6 @@ public class CategoryResource {
     @Inject
     private ItemMapper itemMapper;
 
-    @Inject
-    private SqlSession session;
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response findAll() {
@@ -69,7 +66,6 @@ public class CategoryResource {
         category.setName(name);
 
         categoryMapper.insertCategory(category);
-        session.commit();
 
         Map result = new HashMap();
         result.put("categoryUri", "categories/" + category.getId());
@@ -89,7 +85,6 @@ public class CategoryResource {
         category.setId(id);
 
         categoryMapper.updateCategory(category);
-        session.commit();
 
         return Response.status(Response.Status.NO_CONTENT).build();
     }
@@ -106,7 +101,6 @@ public class CategoryResource {
         }
 
         categoryMapper.deleteCategoryById(id);
-        session.commit();
 
         return Response.status(Response.Status.NO_CONTENT).build();
     }

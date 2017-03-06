@@ -4,6 +4,7 @@ package school.thoughtworks.pos.resource;
 import org.apache.ibatis.session.SqlSession;
 import school.thoughtworks.pos.bean.Cart;
 import school.thoughtworks.pos.bean.Category;
+import school.thoughtworks.pos.bean.Item;
 import school.thoughtworks.pos.mapper.CartMapper;
 import school.thoughtworks.pos.mapper.CategoryMapper;
 import school.thoughtworks.pos.mapper.ItemMapper;
@@ -21,9 +22,9 @@ import java.util.stream.Collectors;
 public class CartResource {
     @Inject
     private CartMapper cartMapper;
-
-    @Inject
-    private SqlSession session;
+//
+//    @Inject
+//    private SqlSession session;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -37,7 +38,7 @@ public class CartResource {
                 .map(item -> item.toMap())
                 .collect(Collectors.toList());
 
-        result.put("cart", items);
+        result.put("carts", items);
         result.put("totalCount", items.size());
 
         return Response.status(Response.Status.OK).entity(result).build();
@@ -48,7 +49,7 @@ public class CartResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response findItemById(@PathParam("id") Integer id) {
 
-        Cart originItems = cartMapper.findCartById(id);
+        Cart originItems = cartMapper.getCartById(id);
 
         Map cart = new HashMap();
 
@@ -61,13 +62,13 @@ public class CartResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response findItemById(Map data) {
 
-        String name = (String) data.get("name");
+        String userName = (String) data.get("userName");
 
         Cart cart = new Cart();
-        cart.setName(name);
+        cart.setName(userName);
 
         cartMapper.insertCart(cart);
-        session.commit();
+//        session.commit();
 
         Map result = new HashMap();
         result.put("cartUri", "carts/" + cart.getId());
@@ -75,6 +76,51 @@ public class CartResource {
         return Response.status(Response.Status.CREATED).entity(result).build();
     }
 
+
+    @PUT
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateItem(Map data, @PathParam("id") Integer id) {
+
+        String userName = (String) data.get("userName");
+
+        Cart cart = new Cart();
+        cart.setName(userName);
+        cart.setId(id);
+
+        cartMapper.updateCart(cart);
+
+        return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteItemById(@PathParam("id") Integer id) {
+
+        cartMapper.deleteCart(id);
+
+        return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
+    @GET
+    @Path("/{cartId}/items")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getItemsByCartId(@PathParam("cartId") Integer cartId) {
+
+        List<Item> originItems = cartMapper.getItemByCartId(cartId);
+
+        Map cart = new HashMap();
+
+        List<Map> items = originItems
+                .stream()
+                .map(item -> item.toMap())
+                .collect(Collectors.toList());
+        Map result = new HashMap();
+        result.put("items", items);
+
+        return Response.status(Response.Status.OK).entity(cart).build();
+    }
 
 
 }

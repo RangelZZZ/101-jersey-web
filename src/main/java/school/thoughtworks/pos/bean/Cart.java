@@ -7,7 +7,7 @@ import java.util.Map;
 public class Cart {
 
     private int id;
-    private String name;
+    private String userName;
 
     public int getId() {
         return id;
@@ -18,11 +18,11 @@ public class Cart {
     }
 
     public String getName() {
-        return name;
+        return userName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String userName) {
+        this.userName = userName;
     }
 
     public Map<String, Object> toMap() {

@@ -10,17 +10,11 @@
         <result column="name" property="name"></result>
     </resultMap>
 
-    <select id="findAll" resultMap="cartMap">
-        select * from cart;
-    </select>
-
-    <select id="findCartById" resultMap="cartMap" parameterType="java.lang.Integer">
+    <select id="getCartById" resultMap="cartMap" parameterType="java.lang.Integer">
         select * from cart where id = #{id};
     </select>
 
-    <insert id="insertCart" parameterType="school.thoughtworks.pos.bean.Cart">
-        insert into cart values(#{name});
+    <insert id="insertCart" keyProperty="id" useGeneratedKeys="true">
+        insert into cart(userName) values(#{userName});
     </insert>
-
-    <update id="updateCart"
 </mapper>

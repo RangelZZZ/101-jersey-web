@@ -19,8 +19,6 @@ public class ItemResource {
     @Inject
     private ItemMapper itemMapper;
 
-    @Inject
-    private SqlSession session;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -69,7 +67,6 @@ public class ItemResource {
         item.setCategoryId(categoryId);
 
         itemMapper.insertItem(item);
-        session.commit();
 
         Map result = new HashMap();
         result.put("itemUri", "items/" + item.getId());
@@ -93,7 +90,6 @@ public class ItemResource {
         item.setId(id);
 
         itemMapper.updateItem(item);
-        session.commit();
 
         return Response.status(Response.Status.NO_CONTENT).build();
     }
@@ -104,7 +100,6 @@ public class ItemResource {
     public Response deleteItemById(@PathParam("id") Integer id) {
 
         itemMapper.deleteItemById(id);
-        session.commit();
 
         return Response.status(Response.Status.NO_CONTENT).build();
     }

@@ -8,6 +8,8 @@ public class Item {
     private double price;
     private String name;
 
+    private int categoryId;
+
     public int getCategoryId() {
         return categoryId;
     }
@@ -15,8 +17,6 @@ public class Item {
     public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
     }
-
-    private int categoryId;
 
     public int getId() {
         return id;
